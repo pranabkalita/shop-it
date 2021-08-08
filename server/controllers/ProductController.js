@@ -4,6 +4,7 @@ import catchAsyncErrors from '../middlewares/catchAsyncErrors.js'
 import APIFeatures from '../utils/apiFeatures.js'
 
 export const newProduct = catchAsyncErrors(async (req, res, next) => {
+  req.body.user = req.user.id
   const product = await Product.create(req.body)
 
   res.status(201).json({
