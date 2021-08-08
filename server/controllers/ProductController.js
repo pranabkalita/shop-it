@@ -1,16 +1,17 @@
 import Product from './../models/Product.js'
 import ErrorHandler from './../utils/errorHandler.js'
+import catchAsyncErrors from '../middlewares/catchAsyncErrors.js'
 
-export const newProduct = async (req, res, next) => {
+export const newProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.create(req.body)
 
   res.status(201).json({
     success: true,
     product,
   })
-}
+})
 
-export const getProducts = async (req, res, next) => {
+export const getProducts = catchAsyncErrors(async (req, res, next) => {
   const products = await Product.find()
 
   res.status(200).json({
@@ -18,9 +19,9 @@ export const getProducts = async (req, res, next) => {
     count: products.length,
     products,
   })
-}
+})
 
-export const getSingleProduct = async (req, res, next) => {
+export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id)
 
   if (!product) {
@@ -31,9 +32,9 @@ export const getSingleProduct = async (req, res, next) => {
     success: true,
     product,
   })
-}
+})
 
-export const updateProduct = async (req, res, next) => {
+export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -48,9 +49,9 @@ export const updateProduct = async (req, res, next) => {
     success: true,
     product,
   })
-}
+})
 
-export const deleteProduct = async (req, res, next) => {
+export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findByIdAndDelete(req.params.id)
 
   if (!product) {
@@ -60,4 +61,4 @@ export const deleteProduct = async (req, res, next) => {
   return res.status(204).json({
     status: 'success',
   })
-}
+})
