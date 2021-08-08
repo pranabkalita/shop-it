@@ -15,8 +15,18 @@ const PORT = process.env.PORT || 8001
 connectDatabase()
 
 // Listener
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(
     `Server running on PORT : ${PORT} in ${process.env.NODE_ENV} mode.`
   )
 )
+
+// Handle Unhanded Promise Rejections
+process.on('unhandledRejection', (err) => {
+  console.warn(`ERROR: ${err.message}`)
+  console.warn('Shutting down the server due to Unhandled Promise Rejection')
+
+  server.close(() => {
+    process.exit(1)
+  })
+})
