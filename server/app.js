@@ -3,8 +3,9 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 
 // Project Imports
-import products from './routes/Product.js'
 import user from './routes/User.js'
+import products from './routes/Product.js'
+import order from './routes/Order.js'
 
 import errorMiddleware from './middlewares/errors.js'
 
@@ -17,6 +18,7 @@ app.use(cookieParser())
 // API Endpoints
 app.use('/api/v1', products)
 app.use('/api/v1', user)
+app.use('/api/v1', order)
 
 // Middleware to handle errors
 app.use(errorMiddleware)
