@@ -127,3 +127,123 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   sendToken(user, 200, res)
 })
+
+export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id)
+
+  res.status(200).json({
+    success: true,
+    user,
+  })
+})
+
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+  if (
+    !req.body.password ||
+    !req.body.confirmPassword ||
+    !req.body.oldPassword
+  ) {
+    return next(
+      new ErrorHandler(
+        'Old Password, Password and Confirm Password is required.',
+        400
+      )
+    )
+  }
+
+  const user = await User.findById(req.user.id).select('+password')
+
+  const isMatched = await user.comparePassword(req.body.oldPassword)
+
+  if (!isMatched) {
+    return next(new ErrorHandler('Old password does not match.', 400))
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHandler('Password does not match.', 400))
+  }
+
+  user.password = req.body.password
+  user.resetPasswordToken = undefined
+  user.resetPasswordExpire = undefined
+
+  await user.save({ validateOnSave: false })
+
+  sendToken(user, 200, res)
+})
+
+export const updateProfile = catchAsyncErrors(async (req, res, next) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+  }
+
+  // TODO: Update avatar
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  })
+
+  res.status(200).json({
+    success: true,
+    user,
+  })
+})
+
+export const getAllUsers = catchAsyncErrors(async (req, res, next) => {
+  const users = await User.find()
+
+  res.status(200).json({
+    success: true,
+    users,
+  })
+})
+
+export const getUserById = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id)
+
+  if (!user) {
+    return next(new ErrorHandler('User not found.', 402))
+  }
+
+  res.status(200).json({
+    success: true,
+    user,
+  })
+})
+
+export const updateUser = catchAsyncErrors(async (req, res, next) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  }
+
+  // TODO: Update avatar
+
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  })
+
+  res.status(200).json({
+    success: true,
+    user,
+  })
+})
+
+export const deleteUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findByIdAndRemove(req.params.id)
+
+  if (!user) {
+    return next(new ErrorHandler('User not found.', 404))
+  }
+
+  res.status(204).json({
+    success: true,
+    user,
+  })
+})
