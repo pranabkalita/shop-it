@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import cloudinary from 'cloudinary'
 
 import User from './../models/User.js'
 import catchAsyncErrors from '../middlewares/catchAsyncErrors.js'
@@ -7,15 +8,21 @@ import sendToken from '../utils/jwtToken.js'
 import { sendEmail } from './../utils/sendEmail.js'
 
 export const register = catchAsyncErrors(async (req, res, next) => {
-  const { name, email, password } = req.body
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: 'shopit/avatars',
+    width: 150,
+    crop: 'scale',
+  })
+
+  const { name, email, password, avatar } = req.body
 
   const user = await User.create({
     name,
     email,
     password,
     avatar: {
-      public_id: '123',
-      url: 'https://abc.com',
+      public_id: result.public_id,
+      url: result.secure_url,
     },
   })
 
