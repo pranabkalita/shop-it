@@ -8,7 +8,7 @@ import Product from '../components/Product'
 import Loader from '../components/Loader'
 import { getProducts } from './../store/actions/productAction'
 
-function Home() {
+function Home({ match }) {
   // Component State
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -20,14 +20,16 @@ function Home() {
   const { loading, products, productsCount, resultsPerPage, error } =
     useSelector((state) => state.products)
 
+  const keyword = match.params.keyword
+
   // On page load, dispatch the lisProduct() action
   useEffect(() => {
     if (error) {
       return alert.error(error)
     }
 
-    dispatch(getProducts(currentPage))
-  }, [dispatch, alert, error, currentPage])
+    dispatch(getProducts(keyword, currentPage))
+  }, [dispatch, alert, error, currentPage, keyword])
 
   // Functions
   const setCurrentPageNumber = (pageNumber) => {
