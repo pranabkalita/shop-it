@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAlert } from 'react-alert'
 
 import Metadata from '../components/layout/Metadata'
 import Product from '../components/Product'
@@ -9,6 +10,7 @@ import { getProducts } from './../store/actions/productAction'
 function Home() {
   // Initiate the Dispatch
   const dispatch = useDispatch()
+  const alert = useAlert()
 
   // Get data from Store
   const { loading, products, productsCount, error } = useSelector(
@@ -17,8 +19,12 @@ function Home() {
 
   // On page load, dispatch the lisProduct() action
   useEffect(() => {
+    if (error) {
+      return alert.error(error)
+    }
+
     dispatch(getProducts())
-  }, [dispatch])
+  }, [dispatch, alert, error])
 
   return (
     <Fragment>
