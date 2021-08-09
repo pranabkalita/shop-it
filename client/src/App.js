@@ -1,8 +1,22 @@
+import { BrowserRouter, Route } from 'react-router-dom'
+
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
+import Home from './pages/Home'
+
+import './App.css'
+
 function App() {
   return (
-    <div className='App'>
-      <h1>ShopIt</h1>
-    </div>
+    <BrowserRouter>
+      <div className='App'>
+        <Header />
+        <div className='container container-fluid'>
+          <Route path='/' component={Home} exact />
+        </div>
+        <Footer />
+      </div>
+    </BrowserRouter>
   )
 }
 
