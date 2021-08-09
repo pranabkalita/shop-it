@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 import Header from './components/layout/Header'
@@ -7,9 +9,17 @@ import ProductDetail from './pages/ProductDetail'
 import Login from './pages/user/Login'
 import Register from './pages/user/Register'
 
+import { loadUser } from './store/actions/userAction'
+
 import './App.css'
 
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(loadUser())
+  }, [dispatch])
+
   return (
     <BrowserRouter>
       <div className='App'>
