@@ -13,6 +13,8 @@ import UpdateProfile from './pages/user/UpdateProfile'
 import UpdatePassword from './pages/user/UpdatePassword'
 import ForgotPassword from './pages/user/ForgotPassword'
 import NewPassword from './pages/user/NewPassword'
+import Cart from './components/cart/Cart'
+
 import ProtectedRoute from './components/routes/ProtectedRoute'
 
 import { loadUser } from './store/actions/userAction'
@@ -44,6 +46,8 @@ function App() {
             component={UpdatePassword}
             exact
           />
+          <ProtectedRoute path='/cart' component={Cart} exact />
+
           <Route path='/password/forgot' component={ForgotPassword} exact />
           <Route path='/password/reset/:token' component={NewPassword} exact />
         </div>
